@@ -12,6 +12,9 @@ public:
 
 	void set_name(std::string);
 	void set_file(std::string);
+	void rename_to_file(std::string);
+
+	static std::string get_name_from_file(std::string);
 
 private:
 	std::string name;

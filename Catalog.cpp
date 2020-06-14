@@ -20,6 +20,11 @@ std::string Catalog::get_file() const
 	return this->file;
 }
 
+std::list<Table>& Catalog::get_list_of_table()
+{
+	return list_of_table;
+}
+
 void Catalog::set_file(std::string file)
 {
 	this->file = file;
@@ -28,7 +33,7 @@ void Catalog::set_file(std::string file)
 Table Catalog::fromString(std::string input)
 {
 	Table c;
-	std::string params[8];
+	std::string params[2];
 	int delimiter_pos = 0;
 	int i = 0;
 
@@ -48,9 +53,54 @@ Table Catalog::fromString(std::string input)
 void Catalog::print()
 {
 	for (std::list<Table>::iterator it = this->list_of_table.begin(); it != this->list_of_table.end(); it++) {
-		std::cout << it->get_name() << ' ';
+		std::cout << it->get_name() << ' ' << it->get_file()<<std::endl;
+	}
+}
 
-		std::cout << '\n';
+bool Catalog::has_table(std::string table_name)
+{
+	
+	for (std::list<Table>::iterator it = this->list_of_table.begin(); it != this->list_of_table.end(); it++) {
+		if (it->get_name().compare(table_name) == 0) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void Catalog::save_to_file(std::string file_name)
+{
+	std::string tmp_buffer;
+	for (std::list<Table>::iterator it = this->list_of_table.begin(); it != this->list_of_table.end(); it++) {
+		tmp_buffer.append(it->get_file());
+		tmp_buffer.append(" ");
+		tmp_buffer.append(it->get_name());
+		tmp_buffer.append("\n");
+	}
+	//tmp_buffer.erase(tmp_buffer.size(), std::string::npos); //изтрива излишния нов ред от цикъла
+	tmp_buffer.pop_back();
+	FileSystem fs;
+	fs.write(file_name, tmp_buffer);
+}
+
+Table Catalog::get_table(std::string table_name)
+{
+	for (std::list<Table>::iterator it = this->list_of_table.begin(); it != this->list_of_table.end(); it++) {
+		if (it->get_name().compare(table_name) == 0) {
+			return *it;
+		}
+	}
+}
+
+void Catalog::rename_table(std::string old_name, std::string new_name)
+{
+	for (std::list<Table>::iterator it = this->list_of_table.begin(); it != this->list_of_table.end(); it++) {
+		if (it->get_name().compare(old_name) == 0) {
+			it->set_name(new_name);
+			it->rename_to_file(new_name);
+
+		}
 	}
 }
 
@@ -66,7 +116,7 @@ void Catalog::load_from_file(std::string file)
 	while (!buffer.empty()) {
 		pos = (buffer.find("\n") != -1) ? buffer.find("\n") : buffer.size();
 		std::string line = buffer.substr(0, pos);
-		std::cout << line;
+		//std::cout << line;
 		Table t = fromString(line);
 		this->list_of_table.push_back(t);
 
