@@ -1,0 +1,4 @@
+table_name_3
+double int
+55.4 6
+88.6 4

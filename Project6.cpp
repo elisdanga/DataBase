@@ -126,6 +126,8 @@ int main()
 
 		if (command.compare("describe") == 0) {
 			if (args[0].size()) {
+				Table t = c1.get_table(args[0]);
+				t.print_columns_info(t.get_file());
 
 			}
 			else {
@@ -135,6 +137,8 @@ int main()
 
 		if (command.compare("print") == 0) {
 			if (args[0].size()) {
+				Table t = c1.get_table(args[0]);
+				t.print_rows(t.get_file());
 
 			}
 			else {
@@ -144,7 +148,8 @@ int main()
 		
 		if (command.compare("export") == 0) {
 			if (args[0].size() && args[1].size()) {
-
+				Table t = c1.get_table(args[0]);
+				t.table_export(t.get_file(), args[1]);
 
 
 			}
@@ -155,9 +160,8 @@ int main()
 		
 		if (command.compare("select") == 0) {
 			if (args[0].size() && args[1].size() && args[2].size()) {
-
-
-
+				Table t = c1.get_table(args[2]);
+				//t.select_from_column(args[0], args[1]);
 			}
 			else {
 				std::cout << "Please use format: \"select <column-n> <value> <table name>\" \n";
@@ -227,9 +231,7 @@ int main()
 				else {
 					c1.rename_table(args[0], args[1]);
 					std::cout << "The name was changed\n";
-
 				}
-
 			}
 			else {
 				std::cout << "Please use format: \"rename <old name> <new name>\" \n";

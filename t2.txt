@@ -1,0 +1,6 @@
+table_name_2
+int string int
+5 elis 7
+4 usuf 8
+5 gfe 0
+3 dfg 7
